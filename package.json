@@ -1,81 +1,110 @@
 {
-  "_from": "config",
-  "_id": "config@3.3.3",
+  "_from": "json5@^2.1.1",
+  "_id": "json5@2.1.3",
   "_inBundle": false,
-  "_integrity": "sha512-T3RmZQEAji5KYqUQpziWtyGJFli6Khz7h0rpxDwYNjSkr5ynyTWwO7WpfjHzTXclNCDfSWQRcwMb+NwxJesCKw==",
-  "_location": "/config",
+  "_integrity": "sha512-KXPvOm8K9IJKFM0bmdn8QXh7udDh1g/giieX0NLCaMnb4hEiVFqnop2ImTXCc5e0/oHz3LTqmHGtExn5hfMkOA==",
+  "_location": "/json5",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "config",
-    "name": "config",
-    "escapedName": "config",
-    "rawSpec": "",
+    "raw": "json5@^2.1.1",
+    "name": "json5",
+    "escapedName": "json5",
+    "rawSpec": "^2.1.1",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^2.1.1"
   },
   "_requiredBy": [
-    "#USER",
-    "/"
+    "/config"
   ],
-  "_resolved": "https://registry.npmjs.org/config/-/config-3.3.3.tgz",
-  "_shasum": "d3c110fce543022c2fde28712e4f1b8440dee101",
-  "_spec": "config",
-  "_where": "C:\\Users\\mannu\\Downloads\\Projects\\afkbot",
+  "_resolved": "https://registry.npmjs.org/json5/-/json5-2.1.3.tgz",
+  "_shasum": "c9b0f7fa9233bfe5807fe66fcf3a5617ed597d43",
+  "_spec": "json5@^2.1.1",
+  "_where": "C:\\Users\\mannu\\Downloads\\Projects\\afkbot\\node_modules\\config",
   "author": {
-    "name": "Loren West",
-    "email": "open_source@lorenwest.com"
+    "name": "Aseem Kishore",
+    "email": "aseem.kishore@gmail.com"
   },
+  "bin": {
+    "json5": "lib/cli.js"
+  },
+  "browser": "dist/index.js",
   "bugs": {
-    "url": "https://github.com/lorenwest/node-config/issues"
+    "url": "https://github.com/json5/json5/issues"
   },
   "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Max Nanasy",
+      "email": "max.nanasy@gmail.com"
+    },
+    {
+      "name": "Andrew Eisenberg",
+      "email": "andrew@eisenberg.as"
+    },
+    {
+      "name": "Jordan Tucker",
+      "email": "jordanbtucker@gmail.com"
+    }
+  ],
   "dependencies": {
-    "json5": "^2.1.1"
+    "minimist": "^1.2.5"
   },
   "deprecated": false,
-  "description": "Configuration control for production node deployments",
+  "description": "JSON for humans.",
   "devDependencies": {
-    "@types/node": "^7.0.8",
-    "coffeescript": "2.2.4",
-    "cson": "^3.0.1",
-    "hjson": "^1.2.0",
-    "js-yaml": "^3.2.2",
-    "properties": "~1.2.1",
-    "semver": "5.3.0",
-    "toml": "^2.0.6",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.4.2",
-    "underscore": "^1.8.3",
-    "vows": ">=0.8.1",
-    "x2js": "^2.0.1"
-  },
-  "directories": {
-    "lib": "./lib"
+    "core-js": "^2.6.5",
+    "eslint": "^5.15.3",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "regenerate": "^1.4.0",
+    "rollup": "^0.64.1",
+    "rollup-plugin-buble": "^0.19.6",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-terser": "^1.0.1",
+    "sinon": "^6.3.5",
+    "tap": "^12.6.0",
+    "unicode-10.0.0": "^0.7.5"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">=6"
   },
-  "homepage": "http://lorenwest.github.com/node-config",
+  "files": [
+    "lib/",
+    "dist/"
+  ],
+  "homepage": "http://json5.org/",
   "keywords": [
-    "conf",
-    "config",
-    "configuration",
-    "node-config",
-    "config-node",
-    "env",
-    "environment"
+    "json",
+    "json5",
+    "es5",
+    "es2015",
+    "ecmascript"
   ],
   "license": "MIT",
-  "main": "./lib/config.js",
-  "name": "config",
+  "main": "lib/index.js",
+  "module": "dist/index.mjs",
+  "name": "json5",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/lorenwest/node-config.git"
+    "url": "git+https://github.com/json5/json5.git"
   },
   "scripts": {
-    "test": "./node_modules/vows/bin/vows test/*.js --spec"
+    "build": "rollup -c",
+    "build-package": "node build/package.js",
+    "build-unicode": "node build/unicode.js",
+    "coverage": "tap --coverage-report html test",
+    "lint": "eslint --fix .",
+    "prepublishOnly": "npm run production",
+    "preversion": "npm run production",
+    "production": "npm run lint && npm test && npm run build",
+    "test": "tap -Rspec --100 test",
+    "version": "npm run build-package && git add package.json5"
   },
-  "version": "3.3.3"
+  "version": "2.1.3"
 }

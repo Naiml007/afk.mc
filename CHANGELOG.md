@@ -1,419 +1,344 @@
-2.20.3 / 2019-10-11
-==================
+### v2.1.3 [[code][c2.1.3], [diff][d2.1.3]]
 
-  * Support Node.js 0.10 (Revert #1059)
-  * Ran "npm unpublish commander@2.20.2". There is no 2.20.2.
+[c2.1.3]: https://github.com/json5/json5/tree/v2.1.3
+[d2.1.3]: https://github.com/json5/json5/compare/v2.1.2...v2.1.3
 
-2.20.1 / 2019-09-29
-==================
+- Fix: An out of memory bug when parsing numbers has been fixed. ([#228],
+  [#229])
 
-  * Improve executable subcommand tracking
-  * Update dev dependencies
+### v2.1.2 [[code][c2.1.2], [diff][d2.1.2]]
 
-2.20.0 / 2019-04-02
-==================
+[c2.1.2]: https://github.com/json5/json5/tree/v2.1.2
+[d2.1.2]: https://github.com/json5/json5/compare/v2.1.1...v2.1.2
 
-  * fix: resolve symbolic links completely when hunting for subcommands (#935)
-  * Update index.d.ts (#930)
-  * Update Readme.md (#924)
-  * Remove --save option as it isn't required anymore (#918)
-  * Add link to the license file (#900)
-  * Added example of receiving args from options (#858)
-  * Added missing semicolon (#882)
-  * Add extension to .eslintrc (#876)
-
-2.19.0 / 2018-10-02
-==================
-
-  * Removed newline after Options and Commands headers (#864)
-  * Bugfix - Error output (#862)
-  * Fix to change default value to string (#856)
-
-2.18.0 / 2018-09-07
-==================
-
-  * Standardize help output (#853)
-  * chmod 644 travis.yml (#851)
-  * add support for execute typescript subcommand via ts-node (#849)
-
-2.17.1 / 2018-08-07
-==================
-
-  * Fix bug in command emit (#844)
-
-2.17.0 / 2018-08-03
-==================
-
-  * fixed newline output after help information (#833)
-  * Fix to emit the action even without command (#778)
-  * npm update (#823)
-
-2.16.0 / 2018-06-29
-==================
-
-  * Remove Makefile and `test/run` (#821)
-  * Make 'npm test' run on Windows (#820)
-  * Add badge to display install size (#807)
-  * chore: cache node_modules (#814)
-  * chore: remove Node.js 4 (EOL), add Node.js 10 (#813)
-  * fixed typo in readme (#812)
-  * Fix types (#804)
-  * Update eslint to resolve vulnerabilities in lodash (#799)
-  * updated readme with custom event listeners. (#791)
-  * fix tests (#794)
-
-2.15.0 / 2018-03-07
-==================
-
-  * Update downloads badge to point to graph of downloads over time instead of duplicating link to npm
-  * Arguments description
-
-2.14.1 / 2018-02-07
-==================
-
-  * Fix typing of help function
-
-2.14.0 / 2018-02-05
-==================
-
-  * only register the option:version event once
-  * Fixes issue #727: Passing empty string for option on command is set to undefined
-  * enable eqeqeq rule
-  * resolves #754 add linter configuration to project
-  * resolves #560 respect custom name for version option
-  * document how to override the version flag
-  * document using options per command
-
-2.13.0 / 2018-01-09
-==================
-
-  * Do not print default for --no-
-  * remove trailing spaces in command help
-  * Update CI's Node.js to LTS and latest version
-  * typedefs: Command and Option types added to commander namespace
-
-2.12.2 / 2017-11-28
-==================
-
-  * fix: typings are not shipped
-
-2.12.1 / 2017-11-23
-==================
-
-  * Move @types/node to dev dependency
-
-2.12.0 / 2017-11-22
-==================
-
-  * add attributeName() method to Option objects
-  * Documentation updated for options with --no prefix
-  * typings: `outputHelp` takes a string as the first parameter
-  * typings: use overloads
-  * feat(typings): update to match js api
-  * Print default value in option help
-  * Fix translation error
-  * Fail when using same command and alias (#491)
-  * feat(typings): add help callback
-  * fix bug when description is add after command with options (#662)
-  * Format js code
-  * Rename History.md to CHANGELOG.md (#668)
-  * feat(typings): add typings to support TypeScript (#646)
-  * use current node
-
-2.11.0 / 2017-07-03
-==================
-
-  * Fix help section order and padding (#652)
-  * feature: support for signals to subcommands (#632)
-  * Fixed #37, --help should not display first (#447)
-  * Fix translation errors. (#570)
-  * Add package-lock.json
-  * Remove engines
-  * Upgrade package version
-  * Prefix events to prevent conflicts between commands and options (#494)
-  * Removing dependency on graceful-readlink
-  * Support setting name in #name function and make it chainable
-  * Add .vscode directory to .gitignore (Visual Studio Code metadata)
-  * Updated link to ruby commander in readme files
-
-2.10.0 / 2017-06-19
-==================
-
-  * Update .travis.yml. drop support for older node.js versions.
-  * Fix require arguments in README.md
-  * On SemVer you do not start from 0.0.1
-  * Add missing semi colon in readme
-  * Add save param to npm install
-  * node v6 travis test
-  * Update Readme_zh-CN.md
-  * Allow literal '--' to be passed-through as an argument
-  * Test subcommand alias help
-  * link build badge to master branch
-  * Support the alias of Git style sub-command
-  * added keyword commander for better search result on npm
-  * Fix Sub-Subcommands
-  * test node.js stable
-  * Fixes TypeError when a command has an option called `--description`
-  * Update README.md to make it beginner friendly and elaborate on the difference between angled and square brackets.
-  * Add chinese Readme file
-
-2.9.0 / 2015-10-13
-==================
-
-  * Add option `isDefault` to set default subcommand #415 @Qix-
-  * Add callback to allow filtering or post-processing of help text #434 @djulien
-  * Fix `undefined` text in help information close #414 #416 @zhiyelee
-
-2.8.1 / 2015-04-22
-==================
+- Fix: Bump `minimist` to `v1.2.5`. ([#222])
 
- * Back out `support multiline description` Close #396 #397
-
-2.8.0 / 2015-04-07
-==================
-
-  * Add `process.execArg` support, execution args like `--harmony` will be passed to sub-commands #387 @DigitalIO @zhiyelee
-  * Fix bug in Git-style sub-commands #372 @zhiyelee
-  * Allow commands to be hidden from help #383 @tonylukasavage
-  * When git-style sub-commands are in use, yet none are called, display help #382 @claylo
-  * Add ability to specify arguments syntax for top-level command #258 @rrthomas
-  * Support multiline descriptions #208 @zxqfox
+### v2.1.1 [[code][c2.1.1], [diff][d2.1.1]]
 
-2.7.1 / 2015-03-11
-==================
+[c2.1.1]: https://github.com/json5/json5/tree/v2.1.1
+[d2.1.1]: https://github.com/json5/json5/compare/v2.0.1...v2.1.1
 
- * Revert #347 (fix collisions when option and first arg have same name) which causes a bug in #367.
+- New: `package.json` and `package.json5` include a `module` property so
+  bundlers like webpack, rollup and parcel can take advantage of the ES Module
+  build. ([#208])
+- Fix: `stringify` outputs `\0` as `\\x00` when followed by a digit. ([#210])
+- Fix: Spelling mistakes have been fixed. ([#196])
 
-2.7.0 / 2015-03-09
-==================
+### v2.1.0 [[code][c2.1.0], [diff][d2.1.0]]
 
- * Fix git-style bug when installed globally. Close #335 #349 @zhiyelee
- * Fix collisions when option and first arg have same name. Close #346 #347 @tonylukasavage
- * Add support for camelCase on `opts()`. Close #353  @nkzawa
- * Add node.js 0.12 and io.js to travis.yml
- * Allow RegEx options. #337 @palanik
- * Fixes exit code when sub-command failing.  Close #260 #332 @pirelenito
- * git-style `bin` files in $PATH make sense. Close #196 #327  @zhiyelee
+[c2.1.0]: https://github.com/json5/json5/tree/v2.1.0
+[d2.1.0]: https://github.com/json5/json5/compare/v2.0.1...v2.1.0
 
-2.6.0 / 2014-12-30
-==================
+- New: The `index.mjs` and `index.min.mjs` browser builds in the `dist`
+  directory support ES6 modules. ([#187])
 
-  * added `Command#allowUnknownOption` method. Close #138 #318 @doozr @zhiyelee
-  * Add application description to the help msg. Close #112 @dalssoft
+### v2.0.1 [[code][c2.0.1], [diff][d2.0.1]]
 
-2.5.1 / 2014-12-15
-==================
+[c2.0.1]: https://github.com/json5/json5/tree/v2.0.1
+[d2.0.1]: https://github.com/json5/json5/compare/v2.0.0...v2.0.1
 
-  * fixed two bugs incurred by variadic arguments. Close #291 @Quentin01 #302 @zhiyelee
+- Fix: The browser builds in the `dist` directory support ES5. ([#182])
 
-2.5.0 / 2014-10-24
-==================
+### v2.0.0 [[code][c2.0.0], [diff][d2.0.0]]
 
- * add support for variadic arguments. Closes #277 @whitlockjc
+[c2.0.0]: https://github.com/json5/json5/tree/v2.0.0
+[d2.0.0]: https://github.com/json5/json5/compare/v1.0.1...v2.0.0
 
-2.4.0 / 2014-10-17
-==================
+- **Major**: JSON5 officially supports Node.js v6 and later. Support for Node.js
+  v4 has been dropped. Since Node.js v6 supports ES5 features, the code has been
+  rewritten in native ES5, and the dependence on Babel has been eliminated.
 
- * fixed a bug on executing the coercion function of subcommands option. Closes #270
- * added `Command.prototype.name` to retrieve command name. Closes #264 #266 @tonylukasavage
- * added `Command.prototype.opts` to retrieve all the options as a simple object of key-value pairs. Closes #262 @tonylukasavage
- * fixed a bug on subcommand name. Closes #248 @jonathandelgado
- * fixed function normalize doesn’t honor option terminator. Closes #216 @abbr
+- New: Support for Unicode 10 has been added.
 
-2.3.0 / 2014-07-16
-==================
+- New: The test framework has been migrated from Mocha to Tap.
 
- * add command alias'. Closes PR #210
- * fix: Typos. Closes #99
- * fix: Unused fs module. Closes #217
+- New: The browser build at `dist/index.js` is no longer minified by default. A
+  minified version is available at `dist/index.min.js`. ([#181])
 
-2.2.0 / 2014-03-29
-==================
+- Fix: The warning has been made clearer when line and paragraph separators are
+  used in strings.
 
- * add passing of previous option value
- * fix: support subcommands on windows. Closes #142
- * Now the defaultValue passed as the second argument of the coercion function.
+- Fix: `package.json5` has been restored, and it is automatically generated and
+  committed when the version is bumped. A new `build-package` NPM script has
+  been added to facilitate this.
 
-2.1.0 / 2013-11-21
-==================
+### v1.0.1 [[code][c1.0.1], [diff][d1.0.1]]
 
- * add: allow cflag style option params, unit test, fixes #174
+[c1.0.1]: https://github.com/json5/json5/tree/v1.0.1
+[d1.0.1]: https://github.com/json5/json5/compare/v1.0.0...v1.0.1
 
-2.0.0 / 2013-07-18
-==================
+This release includes a bug fix and minor change.
 
- * remove input methods (.prompt, .confirm, etc)
+- Fix: `parse` throws on unclosed objects and arrays.
 
-1.3.2 / 2013-07-18
-==================
+- New: `package.json5` has been removed until an easier way to keep it in sync
+  with `package.json` is found.
 
- * add support for sub-commands to co-exist with the original command
 
-1.3.1 / 2013-07-18
-==================
+### v1.0.0 [[code][c1.0.0], [diff][d1.0.0]]
 
- * add quick .runningCommand hack so you can opt-out of other logic when running a sub command
+[c1.0.0]: https://github.com/json5/json5/tree/v1.0.0
+[d1.0.0]: https://github.com/json5/json5/compare/v0.5.1...v1.0.0
 
-1.3.0 / 2013-07-09
-==================
+This release includes major internal changes and public API enhancements.
 
- * add EACCES error handling
- * fix sub-command --help
+- **Major**: JSON5 officially supports Node.js v4 and later. Support for Node.js
+  v0.10 and v0.12 have been dropped.
 
-1.2.0 / 2013-06-13
-==================
+- New: Unicode property names and Unicode escapes in property names are
+  supported. ([#1])
 
- * allow "-" hyphen as an option argument
- * support for RegExp coercion
+- New: `stringify` outputs trailing commas in objects and arrays when a `space`
+  option is provided. ([#66])
 
-1.1.1 / 2012-11-20
-==================
+- New: JSON5 allows line and paragraph separator characters (U+2028 and U+2029)
+  in strings in order to be compatible with JSON. However, ES5 does not allow
+  these characters in strings, so JSON5 gives a warning when they are parsed and
+  escapes them when they are stringified. ([#70])
 
-  * add more sub-command padding
-  * fix .usage() when args are present. Closes #106
+- New: `stringify` accepts an options object as its second argument. The
+  supported options are `replacer`, `space`, and a new `quote` option that
+  specifies the quote character used in strings. ([#71])
 
-1.1.0 / 2012-11-16
-==================
+- New: The CLI supports STDIN and STDOUT and adds `--out-file`, `--space`, and
+  `--validate` options. See `json5 --help` for more information. ([#72], [#84],
+  and [#108])
 
-  * add git-style executable subcommand support. Closes #94
+- New: In addition to the white space characters space `\t`, `\v`, `\f`, `\n`,
+  `\r`, and `\xA0`, the additional white space characters `\u2028`, `\u2029`,
+  and all other characters in the Space Separator Unicode category are allowed.
 
-1.0.5 / 2012-10-09
-==================
+- New: In addition to the character escapes `\'`, `\"`, `\\`, `\b`, `\f`, `\n`,
+  `\r`, and `\t`, the additional character escapes `\v` and `\0`, hexadecimal
+  escapes like `\x0F`, and unnecessary escapes like `\a` are allowed in string
+  values and string property names.
 
-  * fix `--name` clobbering. Closes #92
-  * fix examples/help. Closes #89
+- New: `stringify` outputs strings with single quotes by default but
+  intelligently uses double quotes if there are more single quotes than double
+  quotes inside the string. (i.e. `stringify('Stay here.')` outputs
+  `'Stay here.'` while `stringify('Let\'s go.')` outputs `"Let's go."`)
 
-1.0.4 / 2012-09-03
-==================
+- New: When a character is not allowed in a string, `stringify` outputs a
+  character escape like `\t` when available, a hexadecimal escape like `\x0F`
+  when the Unicode code point is less than 256, or a Unicode character escape
+  like `\u01FF`, in that order.
 
-  * add `outputHelp()` method.
+- New: `stringify` checks for a `toJSON5` method on objects and, if it exists,
+  stringifies its return value instead of the object. `toJSON5` overrides
+  `toJSON` if they both exist.
 
-1.0.3 / 2012-08-30
-==================
+- New: To `require` or `import` JSON5 files, use `require('json5/lib/register')`
+  or `import 'json5/lib/register'`. Previous versions used `json5/lib/require`,
+  which still exists for backward compatibility but is deprecated and will give
+  a warning.
 
-  * remove invalid .version() defaulting
+- New: To use JSON5 in browsers, use the file at `dist/index.js` or
+  `https://unpkg.com/json5@^1.0.0`.
 
-1.0.2 / 2012-08-24
-==================
+- Fix: `stringify` properly outputs `Infinity` and `NaN`. ([#67])
 
-  * add `--foo=bar` support [arv]
-  * fix password on node 0.8.8. Make backward compatible with 0.6 [focusaurus]
+- Fix: `isWord` no longer becomes a property of `JSON5` after calling
+  `stringify`. ([#68] and [#89])
 
-1.0.1 / 2012-08-03
-==================
+- Fix: `stringify` no longer throws when an object does not have a `prototype`.
+  ([#154])
 
-  * fix issue #56
-  * fix tty.setRawMode(mode) was moved to tty.ReadStream#setRawMode() (i.e. process.stdin.setRawMode())
+- Fix: `stringify` properly handles the `key` argument of `toJSON(key)` methods.
+  `toJSON5(key)` follows this pattern.
 
-1.0.0 / 2012-07-05
-==================
+- Fix: `stringify` accepts `Number` and `String` objects as its `space`
+  argument.
 
-  * add support for optional option descriptions
-  * add defaulting of `.version()` to package.json's version
+- Fix: In addition to a function, `stringify` also accepts an array of keys to
+  include in the output as its `replacer` argument. Numbers, `Number` objects,
+  and `String` objects will be converted to a string if they are given as array
+  values.
 
-0.6.1 / 2012-06-01
-==================
 
-  * Added: append (yes or no) on confirmation
-  * Added: allow node.js v0.7.x
+### v0.5.1 [[code][c0.5.1], [diff][d0.5.1]]
 
-0.6.0 / 2012-04-10
-==================
+[c0.5.1]: https://github.com/json5/json5/tree/v0.5.1
+[d0.5.1]: https://github.com/json5/json5/compare/v0.5.0...v0.5.1
 
-  * Added `.prompt(obj, callback)` support. Closes #49
-  * Added default support to .choose(). Closes #41
-  * Fixed the choice example
+This release includes a minor fix for indentations when stringifying empty
+arrays.
 
-0.5.1 / 2011-12-20
-==================
+- Fix: Indents no longer appear in empty arrays when stringified. ([#134])
 
-  * Fixed `password()` for recent nodes. Closes #36
 
-0.5.0 / 2011-12-04
-==================
+### v0.5.0 [[code][c0.5.0], [diff][d0.5.0]]
 
-  * Added sub-command option support [itay]
+[c0.5.0]: https://github.com/json5/json5/tree/v0.5.0
+[d0.5.0]: https://github.com/json5/json5/compare/v0.4.0...v0.5.0
 
-0.4.3 / 2011-12-04
-==================
+This release includes major internal changes and public API enhancements.
 
-  * Fixed custom help ordering. Closes #32
+- **Major:** JSON5 officially supports Node.js v4 LTS and v5. Support for
+  Node.js v0.6 and v0.8 have been dropped, while support for v0.10 and v0.12
+  remain.
 
-0.4.2 / 2011-11-24
-==================
+- Fix: YUI Compressor no longer fails when compressing json5.js. ([#97])
 
-  * Added travis support
-  * Fixed: line-buffered input automatically trimmed. Closes #31
+- New: `parse` and the CLI provide line and column numbers when displaying error
+  messages. ([#101]; awesome work by [@amb26].)
 
-0.4.1 / 2011-11-18
-==================
 
-  * Removed listening for "close" on --help
+### v0.4.0 [[code][c0.4.0], [diff][d0.4.0]]
 
-0.4.0 / 2011-11-15
-==================
+[c0.4.0]: https://github.com/json5/json5/tree/v0.4.0
+[d0.4.0]: https://github.com/json5/json5/compare/v0.2.0...v0.4.0
 
-  * Added support for `--`. Closes #24
+Note that v0.3.0 was tagged, but never published to npm, so this v0.4.0
+changelog entry includes v0.3.0 features.
 
-0.3.3 / 2011-11-14
-==================
+This is a massive release that adds `stringify` support, among other things.
 
-  * Fixed: wait for close event when writing help info [Jerry Hamlet]
+- **Major:** `JSON5.stringify()` now exists!
+  This method is analogous to the native `JSON.stringify()`;
+  it just avoids quoting keys where possible.
+  See the [usage documentation](./README.md#usage) for more.
+  ([#32]; huge thanks and props [@aeisenberg]!)
 
-0.3.2 / 2011-11-01
-==================
+- New: `NaN` and `-NaN` are now allowed number literals.
+  ([#30]; thanks [@rowanhill].)
 
-  * Fixed long flag definitions with values [felixge]
+- New: Duplicate object keys are now allowed; the last value is used.
+  This is the same behavior as JSON. ([#57]; thanks [@jordanbtucker].)
 
-0.3.1 / 2011-10-31
-==================
+- Fix: Properly handle various whitespace and newline cases now.
+  E.g. JSON5 now properly supports escaped CR and CRLF newlines in strings,
+  and JSON5 now accepts the same whitespace as JSON (stricter than ES5).
+  ([#58], [#60], and [#63]; thanks [@jordanbtucker].)
 
-  * Changed `--version` short flag to `-V` from `-v`
-  * Changed `.version()` so it's configurable [felixge]
+- New: Negative hexadecimal numbers (e.g. `-0xC8`) are allowed again.
+  (They were disallowed in v0.2.0; see below.)
+  It turns out they *are* valid in ES5, so JSON5 supports them now too.
+  ([#36]; thanks [@jordanbtucker]!)
 
-0.3.0 / 2011-10-31
-==================
 
-  * Added support for long flags only. Closes #18
+### v0.2.0 [[code][c0.2.0], [diff][d0.2.0]]
 
-0.2.1 / 2011-10-24
-==================
+[c0.2.0]: https://github.com/json5/json5/tree/v0.2.0
+[d0.2.0]: https://github.com/json5/json5/compare/v0.1.0...v0.2.0
 
-  * "node": ">= 0.4.x < 0.7.0". Closes #20
+This release fixes some bugs and adds some more utility features to help you
+express data more easily:
 
-0.2.0 / 2011-09-26
-==================
+- **Breaking:** Negative hexadecimal numbers (e.g. `-0xC8`) are rejected now.
+  While V8 (e.g. Chrome and Node) supported them, it turns out they're invalid
+  in ES5. This has been [fixed in V8][v8-hex-fix] (and by extension, Chrome
+  and Node), so JSON5 officially rejects them now, too. ([#36])
 
-  * Allow for defaults that are not just boolean. Default peassignment only occurs for --no-*, optional, and required arguments. [Jim Isaacs]
+- New: Trailing decimal points in decimal numbers are allowed again.
+  (They were disallowed in v0.1.0; see below.)
+  They're allowed by ES5, and differentiating between integers and floats may
+  make sense on some platforms. ([#16]; thanks [@Midar].)
 
-0.1.0 / 2011-08-24
-==================
+- New: `Infinity` and `-Infinity` are now allowed number literals.
+  ([#30]; thanks [@pepkin88].)
 
-  * Added support for custom `--help` output
+- New: Plus signs (`+`) in front of numbers are now allowed, since it can
+  be helpful in some contexts to explicitly mark numbers as positive.
+  (E.g. when a property represents changes or deltas.)
 
-0.0.5 / 2011-08-18
-==================
+- Fix: unescaped newlines in strings are rejected now.
+  ([#24]; thanks [@Midar].)
 
-  * Changed: when the user enters nothing prompt for password again
-  * Fixed issue with passwords beginning with numbers [NuckChorris]
 
-0.0.4 / 2011-08-15
-==================
+### v0.1.0 [[code][c0.1.0], [diff][d0.1.0]]
 
-  * Fixed `Commander#args`
+[c0.1.0]: https://github.com/json5/json5/tree/v0.1.0
+[d0.1.0]: https://github.com/json5/json5/compare/v0.0.1...v0.1.0
 
-0.0.3 / 2011-08-15
-==================
+This release tightens JSON5 support and adds helpful utility features:
 
-  * Added default option value support
+- New: Support hexadecimal numbers. (Thanks [@MaxNanasy].)
 
-0.0.2 / 2011-08-15
-==================
+- Fix: Reject octal numbers properly now. Previously, they were accepted but
+  improperly parsed as base-10 numbers. (Thanks [@MaxNanasy].)
 
-  * Added mask support to `Command#password(str[, mask], fn)`
-  * Added `Command#password(str, fn)`
+- **Breaking:** Reject "noctal" numbers now (base-10 numbers that begin with a
+  leading zero). These are disallowed by both JSON5 and JSON, as well as by
+  ES5's strict mode. (Thanks [@MaxNanasy].)
 
-0.0.1 / 2010-01-03
-==================
+- New: Support leading decimal points in decimal numbers.
+  (Thanks [@MaxNanasy].)
 
-  * Initial release
+- **Breaking:** Reject trailing decimal points in decimal numbers now. These
+  are disallowed by both JSON5 and JSON. (Thanks [@MaxNanasy].)
+
+- **Breaking:** Reject omitted elements in arrays now. These are disallowed by
+  both JSON5 and JSON.
+
+- Fix: Throw proper `SyntaxError` instances on errors now.
+
+- New: Add Node.js `require()` hook. Register via `json5/lib/require`.
+
+- New: Add Node.js `json5` executable to compile JSON5 files to JSON.
+
+
+### v0.0.1 [[code][c0.0.1], [diff][d0.0.1]]
+
+[c0.0.1]: https://github.com/json5/json5/tree/v0.0.1
+[d0.0.1]: https://github.com/json5/json5/compare/v0.0.0...v0.0.1
+
+This was the first implementation of this JSON5 parser.
+
+- Support unquoted object keys, including reserved words. Unicode characters
+  and escape sequences sequences aren't yet supported.
+
+- Support single-quoted strings.
+
+- Support multi-line strings.
+
+- Support trailing commas in arrays and objects.
+
+- Support comments, both inline and block.
+
+
+### v0.0.0 [[code](https://github.com/json5/json5/tree/v0.0.0)]
+
+Let's consider this to be Douglas Crockford's original [json_parse.js] — a
+parser for the regular JSON format.
+
+
+[json_parse.js]: https://github.com/douglascrockford/JSON-js/blob/master/json_parse.js
+[v8-hex-fix]: http://code.google.com/p/v8/issues/detail?id=2240
+
+[@MaxNanasy]: https://github.com/MaxNanasy
+[@Midar]: https://github.com/Midar
+[@pepkin88]: https://github.com/pepkin88
+[@rowanhill]: https://github.com/rowanhill
+[@aeisenberg]: https://github.com/aeisenberg
+[@jordanbtucker]: https://github.com/jordanbtucker
+[@amb26]: https://github.com/amb26
+
+[#1]: https://github.com/json5/json5/issues/1
+[#16]: https://github.com/json5/json5/issues/16
+[#24]: https://github.com/json5/json5/issues/24
+[#30]: https://github.com/json5/json5/issues/30
+[#32]: https://github.com/json5/json5/issues/32
+[#36]: https://github.com/json5/json5/issues/36
+[#57]: https://github.com/json5/json5/issues/57
+[#58]: https://github.com/json5/json5/pull/58
+[#60]: https://github.com/json5/json5/pull/60
+[#63]: https://github.com/json5/json5/pull/63
+[#66]: https://github.com/json5/json5/issues/66
+[#67]: https://github.com/json5/json5/issues/67
+[#68]: https://github.com/json5/json5/issues/68
+[#70]: https://github.com/json5/json5/issues/70
+[#71]: https://github.com/json5/json5/issues/71
+[#72]: https://github.com/json5/json5/issues/72
+[#84]: https://github.com/json5/json5/pull/84
+[#89]: https://github.com/json5/json5/pull/89
+[#97]: https://github.com/json5/json5/pull/97
+[#101]: https://github.com/json5/json5/pull/101
+[#108]: https://github.com/json5/json5/pull/108
+[#134]: https://github.com/json5/json5/pull/134
+[#154]: https://github.com/json5/json5/issues/154
+[#181]: https://github.com/json5/json5/issues/181
+[#182]: https://github.com/json5/json5/issues/182
+[#187]: https://github.com/json5/json5/issues/187
+[#196]: https://github.com/json5/json5/issues/196
+[#208]: https://github.com/json5/json5/issues/208
+[#210]: https://github.com/json5/json5/issues/210
