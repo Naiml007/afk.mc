@@ -1,239 +1,84 @@
-'use strict';
+/* jshint node: true */
+"use strict";
 
+var lib = {};
 
-module.exports = {
-  copy: copy,
-  checkDataType: checkDataType,
-  checkDataTypes: checkDataTypes,
-  coerceToTypes: coerceToTypes,
-  toHash: toHash,
-  getProperty: getProperty,
-  escapeQuotes: escapeQuotes,
-  equal: require('fast-deep-equal'),
-  ucs2length: require('./ucs2length'),
-  varOccurences: varOccurences,
-  varReplace: varReplace,
-  schemaHasRules: schemaHasRules,
-  schemaHasRulesExcept: schemaHasRulesExcept,
-  schemaUnknownRules: schemaUnknownRules,
-  toQuotedString: toQuotedString,
-  getPathExpr: getPathExpr,
-  getPath: getPath,
-  getData: getData,
-  unescapeFragment: unescapeFragment,
-  unescapeJsonPointer: unescapeJsonPointer,
-  escapeFragment: escapeFragment,
-  escapeJsonPointer: escapeJsonPointer
+var nextTick = process.nextTick || global.setImmediate || global.setTimeout;
+lib.nextTick = function (func) {
+    nextTick(func);
 };
 
-
-function copy(o, to) {
-  to = to || {};
-  for (var key in o) to[key] = o[key];
-  return to;
-}
-
-
-function checkDataType(dataType, data, strictNumbers, negate) {
-  var EQUAL = negate ? ' !== ' : ' === '
-    , AND = negate ? ' || ' : ' && '
-    , OK = negate ? '!' : ''
-    , NOT = negate ? '' : '!';
-  switch (dataType) {
-    case 'null': return data + EQUAL + 'null';
-    case 'array': return OK + 'Array.isArray(' + data + ')';
-    case 'object': return '(' + OK + data + AND +
-                          'typeof ' + data + EQUAL + '"object"' + AND +
-                          NOT + 'Array.isArray(' + data + '))';
-    case 'integer': return '(typeof ' + data + EQUAL + '"number"' + AND +
-                           NOT + '(' + data + ' % 1)' +
-                           AND + data + EQUAL + data +
-                           (strictNumbers ? (AND + OK + 'isFinite(' + data + ')') : '') + ')';
-    case 'number': return '(typeof ' + data + EQUAL + '"' + dataType + '"' +
-                          (strictNumbers ? (AND + OK + 'isFinite(' + data + ')') : '') + ')';
-    default: return 'typeof ' + data + EQUAL + '"' + dataType + '"';
-  }
-}
-
-
-function checkDataTypes(dataTypes, data, strictNumbers) {
-  switch (dataTypes.length) {
-    case 1: return checkDataType(dataTypes[0], data, strictNumbers, true);
-    default:
-      var code = '';
-      var types = toHash(dataTypes);
-      if (types.array && types.object) {
-        code = types.null ? '(': '(!' + data + ' || ';
-        code += 'typeof ' + data + ' !== "object")';
-        delete types.null;
-        delete types.array;
-        delete types.object;
-      }
-      if (types.number) delete types.integer;
-      for (var t in types)
-        code += (code ? ' && ' : '' ) + checkDataType(t, data, strictNumbers, true);
-
-      return code;
-  }
-}
-
-
-var COERCE_TO_TYPES = toHash([ 'string', 'number', 'integer', 'boolean', 'null' ]);
-function coerceToTypes(optionCoerceTypes, dataTypes) {
-  if (Array.isArray(dataTypes)) {
-    var types = [];
-    for (var i=0; i<dataTypes.length; i++) {
-      var t = dataTypes[i];
-      if (COERCE_TO_TYPES[t]) types[types.length] = t;
-      else if (optionCoerceTypes === 'array' && t === 'array') types[types.length] = t;
+lib.parallel = function (tasks, done) {
+    var results = [];
+    var errs = [];
+    var length = 0;
+    var doneLength = 0;
+    function doneIt(ix, err, result) {
+        if (err) {
+            errs[ix] = err;
+        } else {
+            results[ix] = result;
+        }
+        doneLength += 1;
+        if (doneLength >= length) {
+            done(errs.length > 0 ? errs : errs, results);
+        }
     }
-    if (types.length) return types;
-  } else if (COERCE_TO_TYPES[dataTypes]) {
-    return [dataTypes];
-  } else if (optionCoerceTypes === 'array' && dataTypes === 'array') {
-    return ['array'];
-  }
-}
+    Object.keys(tasks).forEach(function (key) {
+        length += 1;
+        var task = tasks[key];
+        lib.nextTick(function () {
+            task(doneIt.bind(null, key), 1);
+        });
+    });
+};
 
+lib.promisify = function (func) {
+    return new Promise(function (resolve, reject) {
+        func(function (err, data) {
+            if (err) {
+                if (!err instanceof Error) {
+                    err = new Error(err);
+                }
+                reject(err);
+                return;
+            }
+            resolve(data);
+        });
+    });
+};
 
-function toHash(arr) {
-  var hash = {};
-  for (var i=0; i<arr.length; i++) hash[arr[i]] = true;
-  return hash;
-}
+lib.iterate = function (args, func, callback) {
+    var errors = [];
+    var f = function () {
+        if (args.length === 0) {
+            lib.nextTick(callback.bind(null, errors));
+            return;
+        }
+        var arg = args.shift();
+        if (typeof arg === "function") {
+            arg(function (err, res) {
+                if (err) {
+                    errors.push(err);
+                } else {
+                    while (res.length > 0) {
+                        args.unshift(res.pop());
+                    }
+                }
+                f();
+            });
+            return;
+        }
+        func(arg, function (err, res) {
+            if (err) {
+                errors.push(err);
+                f();
+            } else {
+                lib.nextTick(callback.bind(null, null, res));
+            }
+        });
+    };
+    lib.nextTick(f);
+};
 
-
-var IDENTIFIER = /^[a-z$_][a-z$_0-9]*$/i;
-var SINGLE_QUOTE = /'|\\/g;
-function getProperty(key) {
-  return typeof key == 'number'
-          ? '[' + key + ']'
-          : IDENTIFIER.test(key)
-            ? '.' + key
-            : "['" + escapeQuotes(key) + "']";
-}
-
-
-function escapeQuotes(str) {
-  return str.replace(SINGLE_QUOTE, '\\$&')
-            .replace(/\n/g, '\\n')
-            .replace(/\r/g, '\\r')
-            .replace(/\f/g, '\\f')
-            .replace(/\t/g, '\\t');
-}
-
-
-function varOccurences(str, dataVar) {
-  dataVar += '[^0-9]';
-  var matches = str.match(new RegExp(dataVar, 'g'));
-  return matches ? matches.length : 0;
-}
-
-
-function varReplace(str, dataVar, expr) {
-  dataVar += '([^0-9])';
-  expr = expr.replace(/\$/g, '$$$$');
-  return str.replace(new RegExp(dataVar, 'g'), expr + '$1');
-}
-
-
-function schemaHasRules(schema, rules) {
-  if (typeof schema == 'boolean') return !schema;
-  for (var key in schema) if (rules[key]) return true;
-}
-
-
-function schemaHasRulesExcept(schema, rules, exceptKeyword) {
-  if (typeof schema == 'boolean') return !schema && exceptKeyword != 'not';
-  for (var key in schema) if (key != exceptKeyword && rules[key]) return true;
-}
-
-
-function schemaUnknownRules(schema, rules) {
-  if (typeof schema == 'boolean') return;
-  for (var key in schema) if (!rules[key]) return key;
-}
-
-
-function toQuotedString(str) {
-  return '\'' + escapeQuotes(str) + '\'';
-}
-
-
-function getPathExpr(currentPath, expr, jsonPointers, isNumber) {
-  var path = jsonPointers // false by default
-              ? '\'/\' + ' + expr + (isNumber ? '' : '.replace(/~/g, \'~0\').replace(/\\//g, \'~1\')')
-              : (isNumber ? '\'[\' + ' + expr + ' + \']\'' : '\'[\\\'\' + ' + expr + ' + \'\\\']\'');
-  return joinPaths(currentPath, path);
-}
-
-
-function getPath(currentPath, prop, jsonPointers) {
-  var path = jsonPointers // false by default
-              ? toQuotedString('/' + escapeJsonPointer(prop))
-              : toQuotedString(getProperty(prop));
-  return joinPaths(currentPath, path);
-}
-
-
-var JSON_POINTER = /^\/(?:[^~]|~0|~1)*$/;
-var RELATIVE_JSON_POINTER = /^([0-9]+)(#|\/(?:[^~]|~0|~1)*)?$/;
-function getData($data, lvl, paths) {
-  var up, jsonPointer, data, matches;
-  if ($data === '') return 'rootData';
-  if ($data[0] == '/') {
-    if (!JSON_POINTER.test($data)) throw new Error('Invalid JSON-pointer: ' + $data);
-    jsonPointer = $data;
-    data = 'rootData';
-  } else {
-    matches = $data.match(RELATIVE_JSON_POINTER);
-    if (!matches) throw new Error('Invalid JSON-pointer: ' + $data);
-    up = +matches[1];
-    jsonPointer = matches[2];
-    if (jsonPointer == '#') {
-      if (up >= lvl) throw new Error('Cannot access property/index ' + up + ' levels up, current level is ' + lvl);
-      return paths[lvl - up];
-    }
-
-    if (up > lvl) throw new Error('Cannot access data ' + up + ' levels up, current level is ' + lvl);
-    data = 'data' + ((lvl - up) || '');
-    if (!jsonPointer) return data;
-  }
-
-  var expr = data;
-  var segments = jsonPointer.split('/');
-  for (var i=0; i<segments.length; i++) {
-    var segment = segments[i];
-    if (segment) {
-      data += getProperty(unescapeJsonPointer(segment));
-      expr += ' && ' + data;
-    }
-  }
-  return expr;
-}
-
-
-function joinPaths (a, b) {
-  if (a == '""') return b;
-  return (a + ' + ' + b).replace(/([^\\])' \+ '/g, '$1');
-}
-
-
-function unescapeFragment(str) {
-  return unescapeJsonPointer(decodeURIComponent(str));
-}
-
-
-function escapeFragment(str) {
-  return encodeURIComponent(escapeJsonPointer(str));
-}
-
-
-function escapeJsonPointer(str) {
-  return str.replace(/~/g, '~0').replace(/\//g, '~1');
-}
-
-
-function unescapeJsonPointer(str) {
-  return str.replace(/~1/g, '/').replace(/~0/g, '~');
-}
+module.exports = lib;
