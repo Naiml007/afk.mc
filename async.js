@@ -1,90 +1,70 @@
-'use strict';
-
-var MissingRefError = require('./error_classes').MissingRef;
-
-module.exports = compileAsync;
-
+var asyncSymbol = Symbol('asyncSymbol');
+var deferConfig = require('./defer').deferConfig;
 
 /**
- * Creates validating function for passed schema with asynchronous loading of missing schemas.
- * `loadSchema` option should be a function that accepts schema uri and returns promise that resolves with the schema.
- * @this  Ajv
- * @param {Object}   schema schema object
- * @param {Boolean}  meta optional true to compile meta-schema; this parameter can be skipped
- * @param {Function} callback an optional node-style callback, it is called with 2 parameters: error (or null) and validating function.
- * @return {Promise} promise that resolves with a validating function.
+ * @param promiseOrFunc   the promise will determine a property's value once resolved
+ *                        can also be a function to defer which resolves to a promise
+ * @returns {Promise}     a marked promise to be resolve later using `resolveAsyncConfigs`
  */
-function compileAsync(schema, meta, callback) {
-  /* eslint no-shadow: 0 */
-  /* global Promise */
-  /* jshint validthis: true */
-  var self = this;
-  if (typeof this._opts.loadSchema != 'function')
-    throw new Error('options.loadSchema should be a function');
-
-  if (typeof meta == 'function') {
-    callback = meta;
-    meta = undefined;
+function asyncConfig(promiseOrFunc) {
+  if (typeof promiseOrFunc === 'function') {  // also acts as deferConfig
+    return deferConfig(function (config, original) {
+      var release;
+      function registerRelease(resolve) { release = resolve; }
+      function callFunc() { return promiseOrFunc.call(config, config, original); }
+      var promise = asyncConfig(new Promise(registerRelease).then(callFunc));
+      promise.release = release;
+      return promise;
+    });
   }
-
-  var p = loadMetaSchemaOf(schema).then(function () {
-    var schemaObj = self._addSchema(schema, undefined, meta);
-    return schemaObj.validate || _compileAsync(schemaObj);
-  });
-
-  if (callback) {
-    p.then(
-      function(v) { callback(null, v); },
-      callback
-    );
-  }
-
-  return p;
-
-
-  function loadMetaSchemaOf(sch) {
-    var $schema = sch.$schema;
-    return $schema && !self.getSchema($schema)
-            ? compileAsync.call(self, { $ref: $schema }, true)
-            : Promise.resolve();
-  }
-
-
-  function _compileAsync(schemaObj) {
-    try { return self._compile(schemaObj); }
-    catch(e) {
-      if (e instanceof MissingRefError) return loadMissingSchema(e);
-      throw e;
+  var promise = promiseOrFunc;
+  promise.async = asyncSymbol;
+  promise.prepare = function(config, prop, property) {
+    if (promise.release) {
+      promise.release();
     }
-
-
-    function loadMissingSchema(e) {
-      var ref = e.missingSchema;
-      if (added(ref)) throw new Error('Schema ' + ref + ' is loaded but ' + e.missingRef + ' cannot be resolved');
-
-      var schemaPromise = self._loadingSchemas[ref];
-      if (!schemaPromise) {
-        schemaPromise = self._loadingSchemas[ref] = self._opts.loadSchema(ref);
-        schemaPromise.then(removePromise, removePromise);
-      }
-
-      return schemaPromise.then(function (sch) {
-        if (!added(ref)) {
-          return loadMetaSchemaOf(sch).then(function () {
-            if (!added(ref)) self.addSchema(sch, ref, undefined, meta);
-          });
-        }
-      }).then(function() {
-        return _compileAsync(schemaObj);
+    return function() {
+      return promise.then(function(value) {
+        Object.defineProperty(prop, property, {value: value});
       });
+    };
+  };
+  return promise;
+}
 
-      function removePromise() {
-        delete self._loadingSchemas[ref];
-      }
-
-      function added(ref) {
-        return self._refs[ref] || self._schemas[ref];
+/**
+ * Do not use `config.get` before executing this method, it will freeze the config object
+ * @param config    the main config object, returned from require('config')
+ * @returns {Promise<config>}   once all promises are resolved, return the original config object
+ */
+function resolveAsyncConfigs(config) {
+  var promises = [];
+  var resolvers = [];
+  (function iterate(prop) {
+    var propsToSort = [];
+    for (var property in prop) {
+      if (prop.hasOwnProperty(property) && prop[property] != null) {
+        propsToSort.push(property);
       }
     }
-  }
+    propsToSort.sort().forEach(function(property) {
+      if (prop[property].constructor === Object) {
+        iterate(prop[property]);
+      }
+      else if (prop[property].constructor === Array) {
+        prop[property].forEach(iterate);
+      }
+      else if (prop[property] && prop[property].async === asyncSymbol) {
+        resolvers.push(prop[property].prepare(config, prop, property));
+        promises.push(prop[property]);
+      }
+    });
+  })(config);
+  return Promise.all(promises).then(function() {
+    resolvers.forEach(function(resolve) { resolve(); });
+    return config;
+  });
 }
+
+module.exports.asyncConfig = asyncConfig;
+module.exports.resolveAsyncConfigs = resolveAsyncConfigs;
